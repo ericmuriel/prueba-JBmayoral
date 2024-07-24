@@ -1,0 +1,38 @@
+.maxColumns {
+  display: grid;
+  gap: 10px; 
+  grid-template-columns: repeat(4, 1fr);
+  margin: 0 auto;
+  max-width: 1200px;
+}
+.loaderContainer{
+  display: grid;
+  gap: 10px; 
+  grid-template-columns: repeat(4, 1fr);
+  margin: 0 auto;
+  max-width: 1200px;
+}
+.minColumns {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+@media (max-width: 768px) {
+  .productGrid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+  .maxColumns {
+    display: grid;
+    gap: 10px;
+    max-width: 900px;
+  }
+  .minColumns {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 600px;
+  }
+}
