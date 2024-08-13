@@ -1,5 +1,3 @@
-// src/components/ProductGrid.test.tsx
-
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import ProductGrid from './ProductGrid';
@@ -15,6 +13,7 @@ jest.mock('../../components/ProductCard/ProductCard', () => (props: Product) => 
   </div>
 ));
 
+// Mock context value
 const mockContextValue = {
   columns: 4,
   data: [],
@@ -30,6 +29,7 @@ const mockContextValue = {
   setSearchTerm: jest.fn()
 };
 
+// Mock products
 const mockProducts: Product[] = [
   { id: 1, title: 'Product 1', price: 10, description: 'Description 1', category: 'Category 1', image: 'image1.jpg' },
   { id: 2, title: 'Product 2', price: 20, description: 'Description 2', category: 'Category 2', image: 'image2.jpg' }
@@ -77,7 +77,9 @@ describe('ProductGrid', () => {
     );
 
     // Verify that the correct class is applied to the grid div
-    expect(container.firstChild).toHaveClass('productGrid');
-    expect(container.firstChild).toHaveClass('maxColumns');
+    // Adjust the class names to match your actual styles
+    const gridContainer = container.firstChild;
+    expect(gridContainer).toHaveClass('productGrid');
+    expect(gridContainer).toHaveClass('maxColumns');
   });
 });

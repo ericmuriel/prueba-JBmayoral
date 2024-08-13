@@ -1,6 +1,4 @@
-import { GenericContext } from "../context/GenericContext";
-import { Product } from "../context/type";
-import { useContext, useEffect } from "react";
+import { Product } from '../context/type';
 
 export const fetchProduct = async (endpoint: string): Promise<Product[]> => {
   try {
@@ -13,24 +11,11 @@ export const fetchProduct = async (endpoint: string): Promise<Product[]> => {
   }
 };
 
-interface FetchProductComponentProps {
-  endpoint?: string;
-}
-
-const FetchProductComponent: React.FC<FetchProductComponentProps> = ({ endpoint = '/products' }) => {
-  const { setData } = useContext(GenericContext);
-
-  useEffect(() => {
-    fetchProduct(endpoint)
-      .then(data => {
-        setData(data);
-      })
-      .catch(error => {
-        console.error('Error fetching product:', error);
-      });
-  }, [endpoint, setData]);
-
-  return null;
+export const loadProducts = async (endpoint: string, setData: (data: Product[]) => void) => {
+  try {
+    const data = await fetchProduct(endpoint);
+    setData(data);
+  } catch (error) {
+    console.error('Error fetching product:', error);
+  }
 };
-
-export default FetchProductComponent;

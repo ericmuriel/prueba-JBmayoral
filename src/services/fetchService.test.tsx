@@ -1,12 +1,13 @@
-import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import FetchProductComponent from './fetchService';
 import { GenericContext } from '../context/GenericContext';
 import { Product } from '../context/type';
+import { fetchProduct } from '../services/fetchService';
 import '@testing-library/jest-dom/extend-expect';
 
+// Mock de setData
 const mockSetData = jest.fn();
 
+// Contexto de prueba
 const mockContextValue = {
   data: [],
   setData: mockSetData,
@@ -23,29 +24,40 @@ const mockContextValue = {
 };
 
 interface WrapperProps {
-    children: React.ReactNode;
-  }
-  
-  const Wrapper: React.FC<WrapperProps> = ({ children }) => (
-    <GenericContext.Provider value={mockContextValue}>
-      {children}
-    </GenericContext.Provider>
-  );
+  children: React.ReactNode;
+}
 
-test('fetches and sets products', async () => {
-  const mockProducts: Product[] = [
-    { id: 1, title: 'Product 1', price: 10, description: 'Description 1', category: 'Category 1', image: 'image1.jpg' },
-    { id: 2, title: 'Product 2', price: 20, description: 'Description 2', category: 'Category 2', image: 'image2.jpg' }
-  ];
+const Wrapper: React.FC<WrapperProps> = ({ children }) => (
+  <GenericContext.Provider value={mockContextValue}>
+    {children}
+  </GenericContext.Provider>
+);
 
-  global.fetch = jest.fn(() =>
-    Promise.resolve({
-      ok: true,
-      json: () => Promise.resolve(mockProducts),
-    })
-  ) as jest.Mock;
+describe('fetchProduct', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-  render(<FetchProductComponent endpoint="/products" />, { wrapper: Wrapper });
+  test('fetches and sets products', async () => {
+    const mockProducts: Product[] = [
+      { id: 1, title: 'Product 1', price: 10, description: 'Description 1', category: 'Category 1', image: 'image1.jpg' },
+      { id: 2, title: 'Product 2', price: 20, description: 'Description 2', category: 'Category 2', image: 'image2.jpg' }
+    ];
 
-  await waitFor(() => expect(mockSetData).toHaveBeenCalledWith(mockProducts));
+    // Mock de fetch
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(mockProducts),
+      })
+    ) as jest.Mock;
+
+    // Ejecutar la función directamente
+    await fetchProduct('/products').then(data => {
+      mockSetData(data);
+    });
+
+    // Verificar que setData haya sido llamado con los productos mock
+    await waitFor(() => expect(mockSetData).toHaveBeenCalledWith(mockProducts));
+  });
 });
